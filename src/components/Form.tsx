@@ -1,9 +1,14 @@
-import { useState, ChangeEvent } from "react"
-import { activity } from "../types"
+import { useState, ChangeEvent, FormEvent, Dispatch } from "react"
+import { Activity } from "../types"
 import { categories } from "../data/categories"
+import { ActivityActions } from "../reducers/activity-reducer"
 
-export default function Form() {
-    const [activity, setActivity] = useState<activity>({
+type FormProps = {
+    dispatch : Dispatch<ActivityActions>
+}
+
+export default function Form({dispatch}: FormProps ) {
+    const [activity, setActivity] = useState<Activity>({
         category: 1,
         name: '',
         calories: 0
@@ -21,10 +26,18 @@ export default function Form() {
     const isValidActivity = () => {
         const { name, calories } = activity
         return name.trim() !== '' && calories > 0
-    }   
+    }
+    
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        
+        dispatch({ type: "save-activity", payload: {newActivity: activity}})
+    }
 
   return (
-    <form className="space-y-5 bg-white shadow p-10 rounded-lg">
+    <form className="space-y-5 bg-white shadow p-10 rounded-lg"
+         onSubmit={handleSubmit}
+    >
         <div className=" grid gridcols-2 gap-3">
             <label htmlFor="category" className="font-bold ">Categoría: </label>
             <select 
@@ -71,7 +84,7 @@ export default function Form() {
         <input
             type="submit"
             className="bg-gray-800 hover:bg-gray-900 w-full p-2 font-bold uppercase text-white cursor-pointer disabled:opacity-10 "
-            value="Create"
+            value={activity.category === 1 ? 'Guardar Comida':'Guardar Ejercicio'}
             disabled={!isValidActivity()}
         />
             
