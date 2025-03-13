@@ -17,9 +17,11 @@ export const  activityReducer = (
     ) => {
     
     if(action.type === "save-activity"){
+        
+
         return {
-            ...state,
-            activities: [...state.activities, action.payload.newActivity]
+            ...state,/// copia del state para no perder info anterior
+            activities: [...state.activities, action.payload.newActivity] ///[rescatar actividades previas, manda a llamar el payload]
         }
     } 
     return state   
